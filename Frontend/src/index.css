@@ -1,0 +1,65 @@
+@import url("https://fonts.googleapis.com/css2?family=Bungee&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700;800&display=swap");
+
+:root {
+  --magenta: #ff2d6e;
+  --cyan: #00d6ff;
+  --yellow: #ffd400;
+  --violet: #7c3aed;
+  --bg: #f5f1e8;
+  --surface: #ffffff;
+  --text: #14121a;
+  --muted: #6b6560;
+  --line: #14121a;
+  --font-display: "Bungee", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "Space Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+}
+a {
+  color: inherit;
+}
+button {
+  font-family: var(--font-mono);
+  cursor: pointer;
+}
+img {
+  display: block;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--text) 1px, transparent 1.4px);
+  background-size: 8px 8px;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0;
+}
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: repeating-linear-gradient(115deg, var(--text) 0 2px, transparent 2px 40px);
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 0;
+}
+#root {
+  position: relative;
+  z-index: 1;
+}
