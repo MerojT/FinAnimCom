@@ -63,3 +63,17 @@ body::after {
   position: relative;
   z-index: 1;
 }
+.header-nav-desktop { display: flex; gap: 6px; }
+.header-burger { display: none; }
+.header-mobile-menu { display: none; }
+@media (max-width: 640px) {
+  .header-nav-desktop { display: none; }
+  .header-burger { display: flex; }
+}
+@media (max-width: 700px) {
+  .player-grid { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 600px) {
+  .catalog-grid-wrap { grid-template-columns: 1fr !important; }
+  .filters-aside { position: static !important; }
+}

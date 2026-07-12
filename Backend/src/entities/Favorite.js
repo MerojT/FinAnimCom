@@ -5,21 +5,21 @@ module.exports = new EntitySchema({
   tableName: "favorites",
   columns: {
     id: { primary: true, type: "int", generated: true },
-    createdAt: { type: "timestamp", createDate: true },
+    createdAt: { type: "timestamp", createDate: true }
   },
   relations: {
     user: {
       type: "many-to-one",
       target: "User",
       joinColumn: true,
-      onDelete: "CASCADE",
+      onDelete: "CASCADE"
     },
     anime: {
       type: "many-to-one",
       target: "Anime",
       joinColumn: true,
-      onDelete: "CASCADE",
-    },
+      onDelete: "CASCADE"
+    }
   },
-  uniques: [{ name: "unique_user_anime", columns: ["user", "anime"] }],
-});
+  uniques: [{ name: "unique_user_anime", columns: ["user", "anime"] }]
+})

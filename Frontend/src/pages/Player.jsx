@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../api/axios";
+import { Navigate } from "react-router-dom";
 
 function Player() {
   const { id } = useParams();
@@ -16,6 +17,7 @@ function Player() {
   const [isFavorite, setIsFavorite] = useState(false);
 
   const currentUser = JSON.parse(localStorage.getItem("user") || "null");
+  if (!currentUser) return <Navigate to="/profile" replace />;
 
   useEffect(() => {
     setLoading(true);

@@ -13,6 +13,6 @@ module.exports = new EntitySchema({
     isAgeVerified: { type: "boolean", default: false },
     isBanned: { type: "boolean", default: false },
     banReason: { type: "varchar", nullable: true },
-    createdAt: { type: "timestamp", createDate: true },
-  },
-});
+    createdAt: { type: "timestamp", createDate: true }
+  }
+})

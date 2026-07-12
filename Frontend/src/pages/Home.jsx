@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import api from "../api/axios";
 import Card from "../components/Card";
 import Hero from "../components/Hero";
+import { Navigate } from "react-router-dom";
 
 function Home() {
   const [anime, setAnime] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const currentUser = JSON.parse(localStorage.getItem("user") || "null");
+  if (!currentUser) return <Navigate to="/profile" replace />;
 
   useEffect(() => {
     api

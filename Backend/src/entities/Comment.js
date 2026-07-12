@@ -6,7 +6,7 @@ module.exports = new EntitySchema({
   columns: {
     id: { primary: true, type: "int", generated: true },
     text: { type: "text" },
-    createdAt: { type: "timestamp", createDate: true },
+    createdAt: { type: "timestamp", createDate: true }
   },
   relations: {
     user: {
@@ -20,6 +20,6 @@ module.exports = new EntitySchema({
       target: "Anime",
       joinColumn: true,
       onDelete: "CASCADE",
-    },
-  },
-});
+    }
+  }
+})

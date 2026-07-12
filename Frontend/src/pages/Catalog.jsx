@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import Card from "../components/Card";
+import { Navigate } from "react-router-dom";
 
 function Catalog() {
   const [anime, setAnime] = useState([]);
@@ -13,6 +14,8 @@ function Catalog() {
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [status, setStatus] = useState("all");
   const [showAdult, setShowAdult] = useState(true);
+  const currentUser = JSON.parse(localStorage.getItem("user") || "null");
+  if (!currentUser) return <Navigate to="/profile" replace />;
 
   useEffect(() => {
     api.get("/anime/genres").then((res) => setAllGenres(res.data)).catch(console.error);

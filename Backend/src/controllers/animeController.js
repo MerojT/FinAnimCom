@@ -46,23 +46,20 @@ const getAnimeById = async (req, res) => {
   try {
     const animeRepo = AppDataSource.getRepository("Anime");
     const anime = await animeRepo.findOneBy({ id: parseInt(req.params.id) });
-    if (!anime) {
-      return res.status(404).json({ error: "Anime not found" });
+  if (!anime) {
+    return res.status(404).json({ error: "Аниме не найдено" });
+  }
+  if (anime.ageRestricted) {
+    const ageVerified = await isRequestAgeVerified(req);
+    if (!ageVerified) {
+      return res
+        .status(403)
+        .json({
+          error: "age_restricted",
+          message: "Разрешено только для 18 летних",
+        });
     }
-
-    if (anime.ageRestricted) {
-      const ageVerified = await isRequestAgeVerified(req);
-      if (!ageVerified) {
-        return res
-          .status(403)
-          .json({
-            error: "age_restricted",
-            message: "Этот тайтл доступен только пользователям, подтвердившим возраст 18+",
-          });
-      }
-    }
-
-    res.json(anime);
+  } res.json(anime);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });
@@ -103,7 +100,7 @@ const getRandomAnime = async (req, res) => {
     if (!ageVerified) qb.andWhere("anime.ageRestricted = false");
 
     const anime = await qb.orderBy("RANDOM()").limit(1).getOne();
-    if (!anime) return res.status(404).json({ error: "Каталог пуст" });
+    if (!anime) return res.status(404).json({ error: "Каталог Пуст" });
     res.json(anime);
   } catch (err) {
     console.error(err);

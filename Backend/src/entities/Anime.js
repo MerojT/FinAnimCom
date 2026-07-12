@@ -16,4 +16,4 @@ module.exports = new EntitySchema({
     status: { type: "varchar", default: "ongoing" },
     createdAt: { type: "timestamp", createDate: true },
   },
-});
+})

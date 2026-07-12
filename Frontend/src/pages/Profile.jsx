@@ -5,7 +5,7 @@ import Card from "../components/Card";
 function Profile() {
   const [user, setUser] = useState(null);
   const [mode, setMode] = useState("login");
-  const [form, setForm] = useState({ username: "", email: "", password: "", age: "" });
+  const [form, setForm] = useState({ username: "", email: "", password: "", age: "", adminCode: ""});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [favorites, setFavorites] = useState([]);
@@ -127,9 +127,11 @@ function Profile() {
           {mode === "register" && (
             <input name="age" type="number" placeholder="Возраст" value={form.age} onChange={handleChange} required style={inputStyle} />
           )}
-
+          {mode === "register" && (
+            <input name="adminCode" type="password" placeholder="Код администратора (необязательно)" value={form.adminCode} onChange={handleChange} style={inputStyle} />
+          )}
           {error && <p style={{ color: "var(--magenta)", fontSize: "13px", margin: 0 }}>{error}</p>}
-
+          
           <button type="submit" disabled={loading} style={{ fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: "14px", textTransform: "uppercase", padding: "14px", border: "2px solid var(--line)", background: "var(--magenta)", color: "#fff", boxShadow: "4px 4px 0 var(--yellow)", cursor: "pointer", marginTop: "6px" }}>
             {loading ? "Подождите..." : mode === "login" ? "Войти" : "Зарегистрироваться"}
           </button>
