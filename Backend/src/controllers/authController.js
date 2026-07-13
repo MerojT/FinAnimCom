@@ -9,7 +9,7 @@ function generateToken(user) {
 
 const register = async (req, res) => {
   try {
-    const { username, email, password, age } = req.body;
+    const { username, email, password, age, adminCode } = req.body;
     if (!username || !email || !password || age === undefined || age === null || age === "") {
       return res.status(400).json({ error: "Заполните все поля, включая возраст" });
     }
@@ -31,7 +31,7 @@ const register = async (req, res) => {
     delete saved.password;
     const token = generateToken(saved);
     res.status(201).json({ token, user: saved });
-    
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });
