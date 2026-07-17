@@ -68,7 +68,7 @@ const getAnimeById = async (req, res) => {
 
 const createAnime = async (req, res) => {
   try {
-    const {title, genre, episodes, rating, ageRestricted, posterUrl, synopsis, status, malId, playerUrl} = req.body;
+    const {title, genre, episodes, rating, trailerUrl, ageRestricted, posterUrl, synopsis, status, malId, playerUrl} = req.body;
     if (!title || typeof title !== "string" || title.trim() === "") {
       return res.status(400).json({error: "Поле title обязательно"})
     }
