@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../api/axios";
 import { Navigate } from "react-router-dom";
-const KODIK_BASE_URL = "https://kodikapi.com/find-player";
+const KODIK_BASE_URL = "https://aniqit.com/serial";
 
 function Player() {
   const { id } = useParams();
@@ -89,7 +89,7 @@ function Player() {
     if (!anime) return null;
     if (anime.playerUrl) return anime.playerUrl;
     if (anime.malId) {
-      return `${KODIK_BASE_URL}?shikimori_id=${anime.malId}`; 
+      return `${KODIK_BASE_URL}/${anime.malId}/iframe`; 
     }
     return null;
   };
