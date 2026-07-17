@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../api/axios";
 import { Navigate } from "react-router-dom";
-const COLLAPS_BASE_URL = "https://embed.collaps.org/anime";
+const ASHDI_BASE_URL = "https://vidsrc.stream/embed/anime";
 
 function Player() {
   const { id } = useParams();
@@ -90,8 +90,8 @@ function Player() {
     if (anime.playerUrl) return anime.playerUrl;
 
     if (anime.malId) {
-      return `${COLLAPS_BASE_URL}/shikimori/${anime.malId}`;
-    };
+      return `${ASHDI_BASE_URL}/${anime.malId}`;
+    }
     return null;
   };
 
