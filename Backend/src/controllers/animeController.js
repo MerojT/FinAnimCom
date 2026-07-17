@@ -30,7 +30,7 @@ const getAllAnime = async (req, res) => {
     }
 
     const [anime, total] = await qb
-      .orderBy("anime.rating", "ASC")
+      .orderBy("anime.id", "DESC")
       .skip(skip)
       .take(limit)
       .getManyAndCount();
