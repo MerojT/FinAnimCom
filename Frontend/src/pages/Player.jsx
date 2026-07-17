@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../api/axios";
 import { Navigate } from "react-router-dom";
-const ASHDI_BASE_URL = "https://vidsrc.stream/embed/anime";
+const KP_BASE_URL = "https://kinobox.tv/api/players";
 
 function Player() {
   const { id } = useParams();
@@ -89,8 +89,8 @@ function Player() {
     if (!anime) return null;
     if (anime.playerUrl) return anime.playerUrl;
 
-    if (anime.malId) {
-      return `${ASHDI_BASE_URL}/${anime.malId}`;
+    if (anime.id === 3) {
+      return `${KP_BASE_URL}?kinopoisk=460431`;
     }
     return null;
   };
