@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../api/axios";
 import { Navigate } from "react-router-dom";
-const KP_BASE_URL = "https://kinobox.tv/api/players";
 
 function Player() {
   const { id } = useParams();
@@ -88,10 +87,6 @@ function Player() {
   const getPlayerSrc = () => {
     if (!anime) return null;
     if (anime.playerUrl) return anime.playerUrl;
-
-    if (anime.malId) {
-      return `https://widgets.kinopoisk.ru/discovery/film/${anime.malId}/`;
-    }
     return null;
   };
 
