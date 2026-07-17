@@ -89,8 +89,8 @@ function Player() {
     if (!anime) return null;
     if (anime.playerUrl) return anime.playerUrl;
 
-    if (anime.id === 3) {
-      return `${KP_BASE_URL}?kinopoisk=460431`;
+    if (anime.malId) {
+      return `https://widgets.kinopoisk.ru/discovery/film/${anime.malId}/`;
     }
     return null;
   };
