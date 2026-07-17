@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../api/axios";
 import { Navigate } from "react-router-dom";
+const KODIK_BASE_URL = "https://kodik.info/find-player"; 
 
 function Player() {
   const { id } = useParams();
@@ -15,6 +16,7 @@ function Player() {
   const [posting, setPosting] = useState(false);
 
   const [isFavorite, setIsFavorite] = useState(false);
+  const [activeTab, setActiveTab] = useState("player"); 
 
   const currentUser = JSON.parse(localStorage.getItem("user") || "null");
   if (!currentUser) return <Navigate to="/profile" replace />;
@@ -25,7 +27,14 @@ function Player() {
     setError(null);
     api
       .get(`/anime/${id}`)
-      .then((res) => setAnime(res.data))
+      .then((res) => {
+        setAnime(res.data);
+        if (!res.data.playerUrl && !res.data.malId) {
+          setActiveTab("trailer");
+        } else {
+          setActiveTab("player");
+        }
+      })
       .catch((err) => {
         if (err.response?.status === 403) {
           setError(err.response.data.message);
@@ -76,12 +85,29 @@ function Player() {
     }
   };
 
+  const getPlayerSrc = () => {
+    if (!anime) return null;
+    if (anime.playerUrl) return anime.playerUrl;
+    if (anime.malId) {
+      return `${KODIK_BASE_URL}?shikimori_id=${anime.malId}`; 
+    }
+    return null;
+  };
+
+  const videoSrc = getPlayerSrc();
+
   if (loading) return <p style={{ padding: "48px 28px" }}>Загрузка...</p>;
 
   if (error) {
     return (
       <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "48px 28px" }}>
-        <div style={{ background: "var(--surface)", border: "3px solid var(--line)", boxShadow: "5px 5px 0 var(--line)", padding: "30px", textAlign: "center" }}>
+        <div style={{ 
+          background: "var(--surface)", 
+          border: "3px solid var(--line)", 
+          boxShadow: "5px 5px 0 var(--line)", 
+          padding: "30px", 
+          textAlign: "center" 
+        }}>
           <p style={{ fontFamily: "var(--font-mono)", fontSize: "14px" }}>{error}</p>
           <Link to="/" style={{ fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: "13px" }}>
             ← На главную
@@ -95,11 +121,28 @@ function Player() {
 
   return (
     <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "48px 28px" }}>
-      <Link to="/" style={{ display: "inline-block", marginBottom: "20px", fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: "12px", textDecoration: "underline", color: "var(--text)" }}>
+      <Link to="/" style={{ 
+        display: "inline-block", 
+        marginBottom: "20px", 
+        fontFamily: "var(--font-mono)", 
+        fontWeight: 700, 
+        fontSize: "12px", 
+        textDecoration: "underline", 
+        color: "var(--text)" 
+      }}>
         ← Назад
       </Link>
 
-      <div style={{ display: "grid", gridTemplateColumns: "220px 1fr", gap: "28px", background: "var(--surface)", border: "3px solid var(--line)", boxShadow: "6px 6px 0 var(--line)", padding: "24px", marginBottom: "40px" }}>
+      <div style={{ 
+        display: "grid", 
+        gridTemplateColumns: "220px 1fr", 
+        gap: "28px", 
+        background: "var(--surface)", 
+        border: "3px solid var(--line)", 
+        boxShadow: "6px 6px 0 var(--line)", 
+        padding: "24px", 
+        marginBottom: "40px" 
+      }}>
         <img src={anime.posterUrl} alt={anime.title} style={{ width: "100%", height: "310px", objectFit: "cover", border: "2px solid var(--line)" }} />
         <div>
           <h1 style={{ fontFamily: "var(--font-display)", fontSize: "26px", margin: "0 0 14px" }}>{anime.title}</h1>
@@ -111,39 +154,78 @@ function Player() {
               {anime.status === "ongoing" ? "Онгоинг" : "Завершено"}
             </span>
             {anime.ageRestricted && (
-              <span style={{ ...tagStyle("#14121A"), color: "var(--magenta)", border: "2px solid var(--magenta)" }}>18+</span>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", fontWeight: 700, padding: "4px 10px", background: "#14121A", color: "var(--magenta)", border: "2px solid var(--magenta)"  }}> 18+ </span>
             )}
           </div>
 
           {currentUser && (
-            <button onClick={toggleFavorite} style={{ marginBottom: "14px", fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: "13px", padding: "8px 16px", border: "2px solid var(--line)", background: isFavorite ? "var(--magenta)" : "var(--surface)", color: isFavorite ? "#fff" : "var(--text)", cursor: "pointer" }}>
-              {isFavorite ? "♥ В избранном" : "♡ В избранное"}
-            </button>
+            <button onClick={toggleFavorite} style={{ marginBottom: "14px", fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: "13px", padding: "8px 16px", border: "2px solid var(--line)", background: isFavorite ? "var(--magenta)" : "var(--surface)", color: isFavorite ? "#fff" : "var(--text)", cursor: "pointer"  }}> {isFavorite ? "♥ В избранном" : "♡ В избранное"} </button>
           )}
 
           <p style={{ fontSize: "14px", lineHeight: 1.6, color: "var(--muted)", margin: 0 }}>{anime.synopsis}</p>
         </div>
       </div>
+      <div style={{ display: "flex", gap: "10px", marginBottom: "16px" }}>
+        <button
+          onClick={() => setActiveTab("player")}
+          disabled={!videoSrc}
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontWeight: 700,
+            fontSize: "13px",
+            padding: "10px 20px",
+            border: "2px solid var(--line)",
+            background: activeTab === "player" ? "var(--text)" : "var(--surface)",
+            color: activeTab === "player" ? "var(--yellow)" : "var(--text)",
+            cursor: videoSrc ? "pointer" : "not-allowed",
+            opacity: videoSrc ? 1 : 0.5,
+            boxShadow: activeTab === "player" ? "none" : "3px 3px 0 var(--line)"
+          }}
+        >
+          {videoSrc ? "▶ Смотреть аниме" : "🚫 Плеер недоступен"}
+        </button>
 
-      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", borderBottom: "3px solid var(--line)", paddingBottom: "10px", marginBottom: "22px" }}>
-        <h2 style={{ fontFamily: "var(--font-display)", fontSize: "20px", margin: 0 }}>Трейлер</h2>
+        <button
+          onClick={() => setActiveTab("trailer")}
+          disabled={!anime.trailerUrl}
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontWeight: 700,
+            fontSize: "13px",
+            padding: "10px 20px",
+            border: "2px solid var(--line)",
+            background: activeTab === "trailer" ? "var(--text)" : "var(--surface)",
+            color: activeTab === "trailer" ? "var(--yellow)" : "var(--text)",
+            cursor: anime.trailerUrl ? "pointer" : "not-allowed",
+            opacity: anime.trailerUrl ? 1 : 0.5,
+            boxShadow: activeTab === "trailer" ? "none" : "3px 3px 0 var(--line)"
+          }}
+        >
+          {anime.trailerUrl ? "🎬 Трейлер" : "🎬 Трейлер отсутствует"}
+        </button>
       </div>
 
-      {anime.trailerUrl ? (
-        <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, border: "3px solid var(--line)", boxShadow: "6px 6px 0 var(--line)", overflow: "hidden", marginBottom: "50px" }}>
+      <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, border: "3px solid var(--line)", boxShadow: "6px 6px 0 var(--line)", overflow: "hidden", marginBottom: "50px", background: "#000" }}>
+        {activeTab === "player" && videoSrc ? (
+          <iframe
+            src={videoSrc}
+            title={`Просмотр ${anime.title}`}
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: 0 }} />
+        ) : activeTab === "trailer" && anime.trailerUrl ? (
           <iframe
             src={anime.trailerUrl}
             title={`Трейлер ${anime.title}`}
             allow="autoplay; encrypted-media"
             allowFullScreen
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: 0 }}
-          />
-        </div>
-      ) : (
-        <div style={{ background: "var(--text)", color: "var(--bg)", border: "3px solid var(--line)", boxShadow: "6px 6px 0 var(--line)", padding: "60px 20px", textAlign: "center", fontFamily: "var(--font-mono)", fontSize: "13px", marginBottom: "50px" }}>
-          Трейлер для этого тайтла недоступен
-        </div>
-      )}
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: 0 }} />
+        ) : (
+          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--bg)", background: "var(--text)", padding: "20px", textAlign: "center", fontFamily: "var(--font-mono)", fontSize: "13px" }}>
+            Для этого тайтла пока нет доступных видео
+          </div>
+        )}
+      </div>
 
       <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", borderBottom: "3px solid var(--line)", paddingBottom: "10px", marginBottom: "22px" }}>
         <h2 style={{ fontFamily: "var(--font-display)", fontSize: "20px", margin: 0 }}>
@@ -158,19 +240,44 @@ function Player() {
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Написать комментарий..."
             rows={3}
-            style={{ width: "100%", padding: "12px", border: "2px solid var(--line)", fontFamily: "var(--font-body)", fontSize: "14px", resize: "vertical", background: "var(--surface)", color: "var(--text)" }}
+            style={{ 
+              width: "100%", 
+              padding: "12px", 
+              border: "2px solid var(--line)", 
+              fontFamily: "var(--font-body)", 
+              fontSize: "14px", 
+              resize: "vertical", 
+              background: "var(--surface)", 
+              color: "var(--text)" 
+            }}
           />
-          {commentError && <p style={{ color: "var(--magenta)", fontSize: "13px", margin: "6px 0" }}>{commentError}</p>}
-          <button type="submit" disabled={posting} style={{ marginTop: "10px", fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: "13px", padding: "10px 20px", border: "2px solid var(--line)", background: "var(--magenta)", color: "#fff", boxShadow: "3px 3px 0 var(--yellow)", cursor: "pointer" }}>
+          {commentError && (
+            <p style={{ color: "var(--magenta)", fontSize: "13px", margin: "6px 0" }}>
+              {commentError}
+            </p>
+          )}
+          <button 
+            type="submit" 
+            disabled={posting} 
+            style={{ 
+              marginTop: "10px", 
+              fontFamily: "var(--font-mono)", 
+              fontWeight: 700, 
+              fontSize: "13px", 
+              padding: "10px 20px", 
+              border: "2px solid var(--line)", 
+              background: "var(--magenta)", 
+              color: "#fff", 
+              boxShadow: "3px 3px 0 var(--yellow)", 
+              cursor: "pointer" 
+            }}
+          >
             {posting ? "Отправка..." : "Отправить"}
           </button>
         </form>
       ) : (
         <p style={{ fontFamily: "var(--font-mono)", fontSize: "13px", marginBottom: "30px" }}>
-          <Link to="/profile" style={{ textDecoration: "underline" }}>
-            Войдите
-          </Link>
-          , чтобы оставить комментарий
+          <Link to="/profile" style={{ textDecoration: "underline" }}> Войдите </Link>, чтобы оставить комментарий
         </p>
       )}
 

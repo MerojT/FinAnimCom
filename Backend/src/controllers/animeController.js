@@ -68,11 +68,11 @@ const getAnimeById = async (req, res) => {
 
 const createAnime = async (req, res) => {
   try {
-    const { title, genre, episodes, rating, ageRestricted, posterUrl, synopsis, status } = req.body;
+    const {title, genre, episodes, rating, ageRestricted, posterUrl, synopsis, status, malId, playerUrl} = req.body;
     if (!title || typeof title !== "string" || title.trim() === "") {
-      return res.status(400).json({ error: "Поле title обязательно" });
+      return res.status(400).json({error: "Поле title обязательно"})
     }
-    const animeRepo = AppDataSource.getRepository("Anime");
+    const animeRepo = AppDataSource.getRepository("Anime")
     const newAnime = animeRepo.create({
       title: title.trim(),
       genre: genre || "Anime",
@@ -80,14 +80,18 @@ const createAnime = async (req, res) => {
       rating: typeof rating === "number" ? rating : 0,
       ageRestricted: !!ageRestricted,
       posterUrl: posterUrl || null,
+      trailerUrl: trailerUrl || null, 
       synopsis: synopsis || "",
       status: status || "ongoing",
-    });
+      malId: malId ? parseInt(malId) : null,
+      playerUrl: playerUrl || null,
+    })
+
     const saved = await animeRepo.save(newAnime);
     res.status(201).json(saved);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: "Server error "})
   }
 };
 

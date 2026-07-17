@@ -14,6 +14,8 @@ module.exports = new EntitySchema({
     trailerUrl: { type: "varchar", nullable: true },
     synopsis: { type: "text", nullable: true },
     status: { type: "varchar", default: "ongoing" },
-    createdAt: { type: "timestamp", createDate: true },
+    malId: { type: "int", nullable: true },
+    playerUrl: { type: "varchar", nullable: true },
+    createdAt: { type: "timestamp", createDate: true}
   },
 })
