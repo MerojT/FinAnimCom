@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../api/axios";
 import { Navigate } from "react-router-dom";
-const KODIK_BASE_URL = "https://gocdn.lol/serial";
+const COLLAPS_BASE_URL = "https://embed.collaps.org/anime";
 
 function Player() {
   const { id } = useParams();
@@ -88,10 +88,10 @@ function Player() {
   const getPlayerSrc = () => {
     if (!anime) return null;
     if (anime.playerUrl) return anime.playerUrl;
-    
+
     if (anime.malId) {
-      return `${KODIK_BASE_URL}/${anime.malId}/iframe`; 
-    }
+      return `${COLLAPS_BASE_URL}/shikimori/${anime.malId}`;
+    };
     return null;
   };
 
