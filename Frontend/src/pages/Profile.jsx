@@ -73,10 +73,6 @@ function Profile() {
                 <b style={{ display: "block", fontFamily: "var(--font-display)", fontSize: "20px", color: "var(--yellow)" }}>{user.role === "admin" ? "Админ" : "Зритель"}</b>
                 <span style={{ fontSize: "11px", opacity: 0.65 }}>роль</span>
               </div>
-              <div style={{ fontFamily: "var(--font-mono)" }}>
-                <b style={{ display: "block", fontFamily: "var(--font-display)", fontSize: "20px", color: "var(--yellow)" }}>{user.isAgeVerified ? "Да" : "Нет"}</b>
-                <span style={{ fontSize: "11px", opacity: 0.65 }}>18+ подтверждён</span>
-              </div>
             </div>
           </div>
         </div>
